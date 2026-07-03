@@ -23,9 +23,12 @@ public class EmailNotificationService(
                 template_params = new
                 {
                     subject,
-                    html_body = htmlBody
+                    html_body = htmlBody,
+                    to_email = _settings.ToEmail,
+                    from_name = "Cartago Website"
                 }
             };
+
             using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(8));
 
             var response = await httpClient.PostAsJsonAsync(

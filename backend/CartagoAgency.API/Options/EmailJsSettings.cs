@@ -6,4 +6,5 @@ public class EmailJsSettings
     public string TemplateId { get; set; } = "";
     public string PublicKey { get; set; } = "";
     public string PrivateKey { get; set; } = "";
+    public string ToEmail { get; set; } = "";
 }
