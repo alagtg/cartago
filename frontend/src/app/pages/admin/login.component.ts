@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '../../core/services/auth.service';
 import { LanguageSwitcherComponent } from '../../shared/language-switcher.component';
+import { API_BASE_URL } from '../../core/config/api.config';
 
 @Component({
   standalone: true,
@@ -32,6 +33,7 @@ import { LanguageSwitcherComponent } from '../../shared/language-switcher.compon
       <div style="display:flex;justify-content:center;margin-top:16px;">
         <app-language-switcher></app-language-switcher>
       </div>
+      <div class="muted" style="font-size:.8rem;margin-top:14px;text-align:center;">API: {{ apiBaseUrl }}</div>
     </form>
   </section>
   `
@@ -43,6 +45,7 @@ export class LoginComponent {
 
   loading = false;
   error = '';
+  apiBaseUrl = API_BASE_URL;
 
   form = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -55,10 +58,25 @@ export class LoginComponent {
     this.error = '';
     this.auth.login(this.form.getRawValue() as any).subscribe({
       next: () => this.router.navigateByUrl('/admin/dashboard'),
-      error: () => {
+      error: (err) => {
         this.loading = false;
-        this.error = 'ADMIN.INVALID_LOGIN';
+        console.error('Admin login failed', err);
+        this.error = this.formatLoginError(err);
       }
     });
+  }
+
+  private formatLoginError(err: any): string {
+    if (err?.status === 0) {
+      return "Impossible de contacter l'API. Verifiez l'URL backend et CORS.";
+    }
+    if (err?.status === 401 || err?.status === 400) {
+      return 'Email ou mot de passe invalide.';
+    }
+    const detail = err?.error?.message || err?.message || err?.statusText;
+    if (detail) {
+      return `Erreur login (${err?.status || 'API'}) : ${detail}`;
+    }
+    return 'Email ou mot de passe invalide.';
   }
 }

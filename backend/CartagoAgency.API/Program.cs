@@ -55,12 +55,14 @@ builder.Services.AddAuthorization();
 // CORS pour Angular Netlify
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("frontend", policy =>
+    options.AddPolicy("CartagoCors", policy =>
     {
-        policy
-            .AllowAnyOrigin()
-            .AllowAnyHeader()
-            .AllowAnyMethod();
+        policy.WithOrigins(
+            "http://localhost:4200",
+            "https://joyful-cactus-004eef.netlify.app"
+        )
+        .AllowAnyHeader()
+        .AllowAnyMethod();
     });
 });
 
@@ -241,8 +243,7 @@ using (var scope = app.Services.CreateScope())
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.UseCors("frontend");
-
+app.UseCors("CartagoCors");
 app.UseAuthentication();
 app.UseAuthorization();
 
