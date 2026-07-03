@@ -1,17 +1,18 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 import { TeamService } from '../../core/services/team.service';
 import { TeamMember } from '../../core/models/site.models';
 
 @Component({
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule],
   template: `
   <section class="section" style="padding-top:120px;">
     <div class="container">
-      <div class="badge">Team Contacts</div>
-      <h1 class="section-title">Contacts for all team members</h1>
-      <p class="section-text">This page is public and groups the contact details of the agency team.</p>
+      <div class="badge">{{ 'TEAM.CONTACTS_BADGE' | translate }}</div>
+      <h1 class="section-title">{{ 'TEAM.CONTACTS_TITLE' | translate }}</h1>
+      <p class="section-text">{{ 'TEAM.CONTACTS_TEXT' | translate }}</p>
 
       <div class="feature-grid" style="margin-top:26px;">
         <article class="card team-card" *ngFor="let member of team">

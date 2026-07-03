@@ -1,12 +1,14 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
+import { AppIconComponent } from './app-icon.component';
+import { LanguageSwitcherComponent } from './language-switcher.component';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, RouterLink, TranslateModule],
+  imports: [CommonModule, RouterLink, TranslateModule, AppIconComponent, LanguageSwitcherComponent],
   template: `
   <header class="site-header">
     <div class="container site-header-inner">
@@ -24,15 +26,11 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
         <a href="" (click)="goToSection($event, 'services')">{{ 'NAV.SERVICES' | translate }}</a>
         <a href="" (click)="goToSection($event, 'contact')">{{ 'NAV.CONTACT' | translate }}</a>
 
-        <div class="lang-switch">
-          <button type="button" class="lang-btn" [class.active]="currentLang === 'en'" (click)="setLang('en')">EN</button>
-          <button type="button" class="lang-btn" [class.active]="currentLang === 'fr'" (click)="setLang('fr')">FR</button>
-          <button type="button" class="lang-btn" [class.active]="currentLang === 'es'" (click)="setLang('es')">ES</button>
-        </div>
+        <app-language-switcher></app-language-switcher>
       </nav>
 
       <button type="button" class="menu-toggle" (click)="menuOpen = !menuOpen" aria-label="Open menu">
-        ☰
+        <app-icon name="menu"></app-icon>
       </button>
     </div>
 
@@ -45,6 +43,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
         <a routerLink="/apply/player" (click)="menuOpen = false">{{ 'NAV.PLAYER_APPLICATION' | translate }}</a>
         <a routerLink="/apply/club" (click)="menuOpen = false">{{ 'NAV.CLUB_REQUEST' | translate }}</a>
         <a routerLink="/admin/login" (click)="menuOpen = false">{{ 'NAV.ADMIN_LOGIN' | translate }}</a>
+        <app-language-switcher></app-language-switcher>
       </div>
     </div>
   </header>
@@ -52,25 +51,8 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 })
 export class NavbarComponent {
   private router = inject(Router);
-  private translate = inject(TranslateService);
 
   menuOpen = false;
-
-  constructor() {
-    const savedLang = localStorage.getItem('cartago_lang') || 'en';
-    this.translate.addLangs(['en', 'fr', 'es']);
-    this.translate.setDefaultLang('en');
-    this.translate.use(savedLang);
-  }
-
-  get currentLang(): string {
-    return this.translate.currentLang || this.translate.defaultLang || 'en';
-  }
-
-  setLang(lang: string): void {
-    this.translate.use(lang);
-    localStorage.setItem('cartago_lang', lang);
-  }
 
   goToSection(event: Event, sectionId: string): void {
     event.preventDefault();

@@ -1,26 +1,27 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import { ContactService } from '../../core/services/contact.service';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule],
   template: `
   <section class="section" style="padding-top:120px;">
     <div class="container contact-grid">
       <div class="card" style="padding:24px;">
-        <div class="badge">Contact</div>
-        <h1 class="section-title">Reach Cartago Football Agency</h1>
-        <p class="section-text">The public user does not need a login. This form is directly connected to the backend.</p>
+        <div class="badge">{{ 'CONTACT.TITLE' | translate }}</div>
+        <h1 class="section-title">{{ 'CONTACT.PAGE_TITLE' | translate }}</h1>
+        <p class="section-text">{{ 'CONTACT.PAGE_TEXT' | translate }}</p>
 
         <div class="grid" style="margin-top:20px;">
           <div class="card" style="padding:16px;">
-            <b>Email</b>
+            <b>{{ 'CONTACT.EMAIL' | translate }}</b>
             <div class="muted" style="margin-top:6px;">contact&#64;cartagoagency.com</div>
           </div>
           <div class="card" style="padding:16px;">
-            <b>Phone</b>
+            <b>{{ 'CONTACT.PHONE' | translate }}</b>
             <div class="muted" style="margin-top:6px;">+216 00 000 000</div>
           </div>
           <div class="card" style="padding:16px;">
@@ -33,25 +34,25 @@ import { ContactService } from '../../core/services/contact.service';
       <form class="card" style="padding:24px;" [formGroup]="form" (ngSubmit)="submit()">
         <div class="form-grid">
           <div>
-            <label>Name</label>
+            <label>{{ 'CONTACT.NAME' | translate }}</label>
             <input class="input" formControlName="name">
           </div>
           <div>
-            <label>Email</label>
+            <label>{{ 'CONTACT.EMAIL' | translate }}</label>
             <input class="input" formControlName="email">
           </div>
         </div>
         <div style="margin-top:16px;">
-          <label>Subject</label>
+          <label>{{ 'CONTACT.SUBJECT' | translate }}</label>
           <input class="input" formControlName="subject">
         </div>
         <div style="margin-top:16px;">
-          <label>Message</label>
+          <label>{{ 'CONTACT.MESSAGE' | translate }}</label>
           <textarea class="textarea" formControlName="message"></textarea>
         </div>
         <div style="margin-top:18px;display:flex;gap:12px;align-items:center;">
-          <button class="btn btn-primary" [disabled]="form.invalid || loading">{{ loading ? 'Sending...' : 'Send Message' }}</button>
-          <span class="muted" *ngIf="success">Message sent successfully.</span>
+          <button class="btn btn-primary" [disabled]="form.invalid || loading">{{ (loading ? 'CONTACT.SENDING' : 'CONTACT.SEND') | translate }}</button>
+          <span class="muted" *ngIf="success">{{ 'CONTACT.SUCCESS' | translate }}</span>
         </div>
       </form>
     </div>

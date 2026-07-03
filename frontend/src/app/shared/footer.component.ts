@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-footer',
   standalone: true,
+  imports: [TranslateModule],
   template: `
   <footer class="footer">
     <div class="container">
@@ -10,36 +12,36 @@ import { Component } from '@angular/core';
         <div class="footer-column">
           <img class="logo-img" src="/assets/brand/cartago-logo.png" alt="Cartago logo">
           <div style="font-size:1.2rem;font-weight:800;letter-spacing:.04em;">CARTAGO</div>
-          <div style="margin-top:-4px;">Football Agency</div>
-          <p class="muted" style="max-width:340px;">Elite representation for football talents worldwide.</p>
+          <div>Football Agency</div>
+          <p class="muted" style="max-width:340px;">{{ 'FOOTER.AGENCY_TEXT' | translate }}</p>
         </div>
 
         <div class="footer-column">
-          <div class="footer-title">Quick Links</div>
-          <a class="footer-link" href="/#players">Players</a>
-          <a class="footer-link" href="/#services">Services</a>
-          <a class="footer-link" href="/#team">Team</a>
-          <a class="footer-link" href="/#contact">Contact</a>
+          <div class="footer-title">{{ 'FOOTER.QUICK_LINKS' | translate }}</div>
+          <a class="footer-link" href="/#players">{{ 'NAV.PLAYERS' | translate }}</a>
+          <a class="footer-link" href="/#services">{{ 'NAV.SERVICES' | translate }}</a>
+          <a class="footer-link" href="/#team">{{ 'NAV.TEAM' | translate }}</a>
+          <a class="footer-link" href="/#contact">{{ 'NAV.CONTACT' | translate }}</a>
         </div>
 
         <div class="footer-column">
-          <div class="footer-title">Services</div>
-          <span class="footer-link">Player Representation</span>
-          <span class="footer-link">Scouting</span>
-          <span class="footer-link">Contract Management</span>
-          <span class="footer-link">Advisory</span>
-          <span class="footer-link">Legal</span>
+          <div class="footer-title">{{ 'FOOTER.SERVICES' | translate }}</div>
+          <span class="footer-link">{{ 'FOOTER.PLAYER_REPRESENTATION' | translate }}</span>
+          <span class="footer-link">{{ 'FOOTER.SCOUTING' | translate }}</span>
+          <span class="footer-link">{{ 'FOOTER.CONTRACT_MANAGEMENT' | translate }}</span>
+          <span class="footer-link">{{ 'FOOTER.ADVISORY' | translate }}</span>
+          <span class="footer-link">{{ 'FOOTER.LEGAL' | translate }}</span>
         </div>
 
         <div class="footer-column">
-          <div class="footer-title">Legal</div>
-          <span class="footer-link">Privacy Policy</span>
-          <span class="footer-link">Terms of Service</span>
-          <span class="footer-link">Cookie Policy</span>
+          <div class="footer-title">{{ 'FOOTER.LEGAL' | translate }}</div>
+          <span class="footer-link">{{ 'FOOTER.PRIVACY_POLICY' | translate }}</span>
+          <span class="footer-link">{{ 'FOOTER.TERMS' | translate }}</span>
+          <span class="footer-link">{{ 'FOOTER.COOKIE' | translate }}</span>
         </div>
       </div>
 
-      <div class="footer-bottom">© 2026 Cartago Football Agency. All rights reserved.</div>
+      <div class="footer-bottom">{{ 'FOOTER.COPYRIGHT' | translate }}</div>
     </div>
   </footer>
   `

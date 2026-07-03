@@ -1,17 +1,18 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 import { TeamService } from '../../core/services/team.service';
 import { TeamMember } from '../../core/models/site.models';
 
 @Component({
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule],
   template: `
   <section class="section" style="padding-top:120px;">
     <div class="container">
-      <div class="badge">Our Team</div>
-      <h1 class="section-title">Professional profiles with photos</h1>
-      <p class="section-text">You asked for team photos, so the cards already include image zones that you can replace with real photos later.</p>
+      <div class="badge">{{ 'TEAM.TITLE' | translate }}</div>
+      <h1 class="section-title">{{ 'TEAM.PAGE_TITLE' | translate }}</h1>
+      <p class="section-text">{{ 'TEAM.PAGE_TEXT' | translate }}</p>
 
       <div class="feature-grid" style="margin-top:26px;">
         <article class="card team-card" *ngFor="let member of team">

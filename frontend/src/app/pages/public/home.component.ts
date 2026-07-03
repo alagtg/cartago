@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { PlayerService } from '../../core/services/player.service';
 import { TeamService } from '../../core/services/team.service';
 import { AgencyServiceService } from '../../core/services/agency-service.service';
@@ -10,11 +11,12 @@ import { SettingsService } from '../../core/services/settings.service';
 import { ContactService } from '../../core/services/contact.service';
 import { Player, TeamMember, AgencyService, SiteSetting } from '../../core/models/site.models';
 import { PlayerModalComponent } from '../../shared/player-modal.component';
+import { AppIconComponent } from '../../shared/app-icon.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterLink, PlayerModalComponent],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterLink, PlayerModalComponent, AppIconComponent, TranslateModule],
   template: `
   <section class="hero">
     <div class="container hero-inner">
@@ -22,11 +24,11 @@ import { PlayerModalComponent } from '../../shared/player-modal.component';
         <img src="/assets/brand/cartago-logo.png" alt="Cartago logo">
       </div>
       <div class="hero-copy">
-        <h1>Cartago Football Agency</h1>
-        <p>{{ getSetting('heroSubtitle', 'Elite Representation • Global Network • Strategic Growth') }}</p>
+        <h1>{{ 'HOME.TITLE' | translate }}</h1>
+        <p>{{ getSetting('heroSubtitle', ('HOME.SUBTITLE' | translate)) }}</p>
         <div class="hero-actions">
-          <a href="#players" class="btn btn-primary">Explore Players <span>→</span></a>
-          <a href="#contact" class="btn btn-secondary">Contact Us</a>
+          <a href="#players" class="btn btn-primary">{{ 'HOME.EXPLORE_PLAYERS' | translate }} <app-icon name="arrow-right"></app-icon></a>
+          <a href="#contact" class="btn btn-secondary">{{ 'HOME.CONTACT_US' | translate }}</a>
         </div>
       </div>
     </div>
@@ -36,26 +38,26 @@ import { PlayerModalComponent } from '../../shared/player-modal.component';
     <div class="container">
       <div class="page-head">
         <div>
-          <div class="badge">About The Agency</div>
-          <h2 class="section-title">International positioning with premium football expertise</h2>
-          <p class="section-text">We help players, clubs and partners move faster with strong scouting, negotiation support and strategic visibility across Europe, Africa and the Middle East.</p>
+          <div class="badge">{{ 'HOME.ABOUT_BADGE' | translate }}</div>
+          <h2 class="section-title">{{ 'HOME.ABOUT_TITLE' | translate }}</h2>
+          <p class="section-text">{{ 'HOME.ABOUT_TEXT' | translate }}</p>
         </div>
       </div>
       <div class="info-grid">
         <article class="card info-card">
-          <div class="service-icon">🌍</div>
-          <h3>Positioning</h3>
-          <p class="section-text">Cartago Football Agency connects talent, clubs and opportunities through a premium international network.</p>
+          <div class="service-icon"><app-icon name="globe"></app-icon></div>
+          <h3>{{ 'HOME.POSITIONING' | translate }}</h3>
+          <p class="section-text">{{ 'HOME.POSITIONING_TEXT' | translate }}</p>
         </article>
         <article class="card info-card">
-          <div class="service-icon">🎯</div>
-          <h3>Vision</h3>
-          <p class="section-text">{{ getSetting('vision', 'Become a global reference in football representation and talent development.') }}</p>
+          <div class="service-icon"><app-icon name="target"></app-icon></div>
+          <h3>{{ 'HOME.VISION' | translate }}</h3>
+          <p class="section-text">{{ getSetting('vision', ('HOME.VISION_TEXT' | translate)) }}</p>
         </article>
         <article class="card info-card">
-          <div class="service-icon">🤝</div>
-          <h3>Mission</h3>
-          <p class="section-text">{{ getSetting('mission', 'Empower athletes through strategic career management, international exposure and professional excellence.') }}</p>
+          <div class="service-icon"><app-icon name="handshake"></app-icon></div>
+          <h3>{{ 'HOME.MISSION' | translate }}</h3>
+          <p class="section-text">{{ getSetting('mission', ('HOME.MISSION_TEXT' | translate)) }}</p>
         </article>
       </div>
     </div>
@@ -65,17 +67,17 @@ import { PlayerModalComponent } from '../../shared/player-modal.component';
     <div class="container">
       <div class="page-head">
         <div>
-          <div class="badge">Players</div>
-          <h2 class="section-title">Search and browse player profiles</h2>
-          <p class="section-text">Pagination is available here on the home page so you can manage 30 players or more without opening another page.</p>
+          <div class="badge">{{ 'HOME.PLAYERS_BADGE' | translate }}</div>
+          <h2 class="section-title">{{ 'HOME.PLAYERS_TITLE' | translate }}</h2>
+          <p class="section-text">{{ 'HOME.PLAYERS_TEXT' | translate }}</p>
         </div>
       </div>
 
       <div class="card" style="padding:18px;margin-bottom:22px;">
         <div class="toolbar">
-          <input class="input" style="max-width:360px;" [(ngModel)]="searchTerm" placeholder="Search by player, nationality, club or position">
+          <input class="input" style="max-width:360px;" [(ngModel)]="searchTerm" [placeholder]="'PLAYERS.SEARCH' | translate">
           <select class="select" style="max-width:220px;" [(ngModel)]="selectedPosition">
-            <option value="">All positions</option>
+            <option value="">{{ 'PLAYERS.ALL_POSITIONS' | translate }}</option>
             <option *ngFor="let position of positions" [value]="position">{{ position }}</option>
           </select>
         </div>
@@ -94,21 +96,21 @@ import { PlayerModalComponent } from '../../shared/player-modal.component';
             </div>
             <div class="muted" style="margin-top:12px;">Strong foot: {{ player.strongFoot }}</div>
             <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;">
-              <button class="btn btn-primary" (click)="selectedPlayer = player">View Profile</button>
-              <a class="btn btn-secondary" [routerLink]="['/players', player.slug]">Open Full Page</a>
+              <button class="btn btn-primary" (click)="selectedPlayer = player">{{ 'PLAYERS.VIEW_PROFILE' | translate }}</button>
+              <a class="btn btn-secondary" [routerLink]="['/players', player.slug]">{{ 'PLAYERS.OPEN_FULL_PAGE' | translate }}</a>
             </div>
           </div>
         </article>
       </div>
 
       <ng-template #emptyPlayers>
-        <div class="card empty-state">No players found with the current search.</div>
+        <div class="card empty-state">{{ 'PLAYERS.EMPTY' | translate }}</div>
       </ng-template>
 
       <div class="pagination" *ngIf="totalPages > 1">
-        <button (click)="page = page - 1" [disabled]="page === 1">‹</button>
+        <button (click)="page = page - 1" [disabled]="page === 1" aria-label="Previous page"><app-icon name="chevron-left"></app-icon></button>
         <button *ngFor="let p of pages" [class.active]="page === p" (click)="page = p">{{ p }}</button>
-        <button (click)="page = page + 1" [disabled]="page === totalPages">›</button>
+        <button (click)="page = page + 1" [disabled]="page === totalPages" aria-label="Next page"><app-icon name="chevron-right"></app-icon></button>
       </div>
     </div>
   </section>
@@ -117,8 +119,8 @@ import { PlayerModalComponent } from '../../shared/player-modal.component';
     <div class="container">
       <div class="page-head">
         <div>
-          <div class="badge">Our Team</div>
-          <h2 class="section-title">Every team member visible directly on the home page</h2>
+          <div class="badge">{{ 'HOME.TEAM_BADGE' | translate }}</div>
+          <h2 class="section-title">{{ 'HOME.TEAM_TITLE' | translate }}</h2>
         </div>
       </div>
 
@@ -130,8 +132,8 @@ import { PlayerModalComponent } from '../../shared/player-modal.component';
             <div class="badge">{{ member.role }}</div>
             <p class="section-text" style="margin-top:14px;">{{ member.bio }}</p>
             <div style="margin-top:16px;display:grid;gap:8px;">
-              <div class="muted">✉ {{ member.email }}</div>
-              <div class="muted">☎ {{ member.phone }}</div>
+              <div class="muted contact-line"><app-icon name="mail"></app-icon> {{ member.email }}</div>
+              <div class="muted contact-line"><app-icon name="phone"></app-icon> {{ member.phone }}</div>
             </div>
           </div>
         </article>
@@ -143,15 +145,15 @@ import { PlayerModalComponent } from '../../shared/player-modal.component';
     <div class="container">
       <div class="page-head">
         <div>
-          <div class="badge">Services</div>
-          <h2 class="section-title">Player and club services in the same home experience</h2>
+          <div class="badge">{{ 'HOME.SERVICES_BADGE' | translate }}</div>
+          <h2 class="section-title">{{ 'HOME.SERVICES_TITLE' | translate }}</h2>
         </div>
       </div>
 
       <div class="list-cards">
         <article class="card service-card" *ngFor="let item of services">
           <div class="service-body">
-            <div class="service-icon">{{ getIcon(item.icon) }}</div>
+            <div class="service-icon"><app-icon [name]="getIconName(item.icon)"></app-icon></div>
             <div class="badge" style="margin-top:16px;">{{ item.category }}</div>
             <h3 style="margin:14px 0 8px;">{{ item.title }}</h3>
             <p class="section-text">{{ item.description }}</p>
@@ -164,12 +166,12 @@ import { PlayerModalComponent } from '../../shared/player-modal.component';
   <section class="section">
     <div class="container card cta-panel">
       <div>
-        <div class="badge">Ready to work together?</div>
-        <h2 class="section-title" style="margin-top:14px;">Players, clubs and partners can reach the agency directly.</h2>
+        <div class="badge">{{ 'HOME.READY_TITLE' | translate }}</div>
+        <h2 class="section-title" style="margin-top:14px;">{{ 'HOME.READY_TEXT' | translate }}</h2>
       </div>
       <div class="toolbar">
-        <a routerLink="/apply/player" class="btn btn-primary">Player Application</a>
-        <a routerLink="/apply/club" class="btn btn-secondary">Club Request</a>
+        <a routerLink="/apply/player" class="btn btn-primary">{{ 'ACTIONS.PLAYER_APPLICATION' | translate }}</a>
+        <a routerLink="/apply/club" class="btn btn-secondary">{{ 'ACTIONS.CLUB_REQUEST' | translate }}</a>
       </div>
     </div>
   </section>
@@ -178,12 +180,12 @@ import { PlayerModalComponent } from '../../shared/player-modal.component';
     <div class="container contact-grid">
       <div class="grid">
         <article class="card contact-card">
-          <div class="badge">Get In Touch</div>
-          <h2 class="section-title" style="font-size:2.2rem;margin-top:14px;">Ready to work together?</h2>
-          <p class="section-text">Players, clubs and partners can reach the agency directly from the website.</p>
+          <div class="badge">{{ 'HOME.GET_IN_TOUCH' | translate }}</div>
+          <h2 class="section-title" style="font-size:2.2rem;margin-top:14px;">{{ 'HOME.READY_TITLE' | translate }}</h2>
+          <p class="section-text">{{ 'HOME.CONTACT_TEXT' | translate }}</p>
         </article>
         <article class="card contact-card">
-          <div class="footer-title">Follow Us</div>
+          <div class="footer-title">{{ 'HOME.FOLLOW_US' | translate }}</div>
           <div class="grid" style="gap:12px;margin-top:12px;">
             <div><b>Email</b><div class="muted" style="margin-top:6px;">contact&#64;cartagoagency.com</div></div>
             <div><b>Phone</b><div class="muted" style="margin-top:6px;">+216 00 000 000</div></div>
@@ -195,25 +197,25 @@ import { PlayerModalComponent } from '../../shared/player-modal.component';
       <form class="card" style="padding:24px;" [formGroup]="contactForm" (ngSubmit)="submitContact()">
         <div class="form-grid">
           <div>
-            <label>Name</label>
-            <input class="input" formControlName="name" placeholder="Your name">
+            <label>{{ 'CONTACT.NAME' | translate }}</label>
+            <input class="input" formControlName="name" [placeholder]="'CONTACT.NAME_PLACEHOLDER' | translate">
           </div>
           <div>
-            <label>Email</label>
-            <input class="input" formControlName="email" placeholder="your@email.com">
+            <label>{{ 'CONTACT.EMAIL' | translate }}</label>
+            <input class="input" formControlName="email" [placeholder]="'CONTACT.EMAIL_PLACEHOLDER' | translate">
           </div>
         </div>
         <div style="margin-top:16px;">
-          <label>Subject</label>
-          <input class="input" formControlName="subject" placeholder="Subject">
+          <label>{{ 'CONTACT.SUBJECT' | translate }}</label>
+          <input class="input" formControlName="subject" [placeholder]="'CONTACT.SUBJECT_PLACEHOLDER' | translate">
         </div>
         <div style="margin-top:16px;">
-          <label>Message</label>
-          <textarea class="textarea" formControlName="message" placeholder="Your message..."></textarea>
+          <label>{{ 'CONTACT.MESSAGE' | translate }}</label>
+          <textarea class="textarea" formControlName="message" [placeholder]="'CONTACT.MESSAGE_PLACEHOLDER' | translate"></textarea>
         </div>
         <div style="margin-top:18px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
-          <button class="btn btn-primary" [disabled]="contactForm.invalid || contactLoading">{{ contactLoading ? 'Sending...' : 'Send Message' }}</button>
-          <span class="muted" *ngIf="contactSuccess">Message sent successfully.</span>
+          <button class="btn btn-primary" [disabled]="contactForm.invalid || contactLoading">{{ (contactLoading ? 'CONTACT.SENDING' : 'CONTACT.SEND') | translate }}</button>
+          <span class="muted" *ngIf="contactSuccess">{{ 'CONTACT.SUCCESS' | translate }}</span>
           <span class="field-error" *ngIf="contactError">{{ contactError }}</span>
         </div>
       </form>
@@ -292,18 +294,18 @@ export class HomeComponent implements OnInit {
     return this.settings.find((s) => s.key === key)?.value || fallback;
   }
 
-  getIcon(icon: string): string {
+  getIconName(icon: string): string {
     const map: Record<string, string> = {
-      star: '★',
-      file: '📄',
-      plane: '✈',
-      search: '🔎',
-      radar: '📡',
-      report: '📋',
-      trophy: '🏆',
-      contract: '✍'
+      star: 'star',
+      file: 'file-text',
+      plane: 'plane',
+      search: 'search',
+      radar: 'radar',
+      report: 'clipboard-list',
+      trophy: 'trophy',
+      contract: 'pen-line'
     };
-    return map[icon] || '⚽';
+    return map[icon] || 'football';
   }
 
   submitContact(): void {

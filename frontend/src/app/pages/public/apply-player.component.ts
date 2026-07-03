@@ -1,41 +1,42 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import { PlayerApplicationService } from '../../core/services/player-application.service';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule],
   template: `
   <section class="section" style="padding-top:120px;">
     <div class="container">
-      <div class="badge">Player Application</div>
-      <h1 class="section-title">Join the agency</h1>
-      <p class="section-text">This form is connected to the backend and visible in the admin area.</p>
+      <div class="badge">{{ 'APPLY_PLAYER.BADGE' | translate }}</div>
+      <h1 class="section-title">{{ 'APPLY_PLAYER.TITLE' | translate }}</h1>
+      <p class="section-text">{{ 'APPLY_PLAYER.TEXT' | translate }}</p>
 
       <form class="card" style="padding:24px;margin-top:26px;" [formGroup]="form" (ngSubmit)="submit()">
         <div class="form-grid">
-          <div><label>Full Name</label><input class="input" formControlName="fullName"></div>
-          <div><label>Date of Birth</label><input class="input" type="date" formControlName="dateOfBirth"></div>
-          <div><label>Nationality</label><input class="input" formControlName="nationality"></div>
-          <div><label>Position</label><input class="input" formControlName="position"></div>
-          <div><label>Strong Foot</label><input class="input" formControlName="strongFoot"></div>
-          <div><label>Current Club</label><input class="input" formControlName="currentClub"></div>
-          <div><label>Height (cm)</label><input class="input" type="number" formControlName="height"></div>
-          <div><label>Weight (kg)</label><input class="input" type="number" formControlName="weight"></div>
-          <div><label>Contract Situation</label><input class="input" formControlName="contractSituation"></div>
-          <div><label>Video Link</label><input class="input" formControlName="videoLink"></div>
-          <div><label>Phone Number</label><input class="input" formControlName="phoneNumber"></div>
-          <div><label>Email</label><input class="input" formControlName="email"></div>
+          <div><label>{{ 'APPLY_PLAYER.FULL_NAME' | translate }}</label><input class="input" formControlName="fullName"></div>
+          <div><label>{{ 'APPLY_PLAYER.DOB' | translate }}</label><input class="input" type="date" formControlName="dateOfBirth"></div>
+          <div><label>{{ 'APPLY_PLAYER.NATIONALITY' | translate }}</label><input class="input" formControlName="nationality"></div>
+          <div><label>{{ 'APPLY_PLAYER.POSITION' | translate }}</label><input class="input" formControlName="position"></div>
+          <div><label>{{ 'APPLY_PLAYER.STRONG_FOOT' | translate }}</label><input class="input" formControlName="strongFoot"></div>
+          <div><label>{{ 'APPLY_PLAYER.CURRENT_CLUB' | translate }}</label><input class="input" formControlName="currentClub"></div>
+          <div><label>{{ 'APPLY_PLAYER.HEIGHT' | translate }}</label><input class="input" type="number" formControlName="height"></div>
+          <div><label>{{ 'APPLY_PLAYER.WEIGHT' | translate }}</label><input class="input" type="number" formControlName="weight"></div>
+          <div><label>{{ 'APPLY_PLAYER.CONTRACT' | translate }}</label><input class="input" formControlName="contractSituation"></div>
+          <div><label>{{ 'APPLY_PLAYER.VIDEO' | translate }}</label><input class="input" formControlName="videoLink"></div>
+          <div><label>{{ 'APPLY_PLAYER.PHONE' | translate }}</label><input class="input" formControlName="phoneNumber"></div>
+          <div><label>{{ 'APPLY_PLAYER.EMAIL' | translate }}</label><input class="input" formControlName="email"></div>
         </div>
         <div style="margin-top:16px;">
-          <label>Additional Notes</label>
+          <label>{{ 'APPLY_PLAYER.NOTES' | translate }}</label>
           <textarea class="textarea" formControlName="additionalNotes"></textarea>
         </div>
 
         <div style="margin-top:18px;display:flex;gap:12px;align-items:center;">
-          <button class="btn btn-primary" [disabled]="form.invalid || loading">{{ loading ? 'Submitting...' : 'Submit Application' }}</button>
-          <span class="muted" *ngIf="success">Application sent successfully.</span>
+          <button class="btn btn-primary" [disabled]="form.invalid || loading">{{ (loading ? 'APPLY_PLAYER.SUBMITTING' : 'APPLY_PLAYER.SUBMIT') | translate }}</button>
+          <span class="muted" *ngIf="success">{{ 'APPLY_PLAYER.SUCCESS' | translate }}</span>
         </div>
       </form>
     </div>

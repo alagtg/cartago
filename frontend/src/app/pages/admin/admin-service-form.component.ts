@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AgencyServiceService } from '../../core/services/agency-service.service';
+import { AppIconComponent } from '../../shared/app-icon.component';
 
 @Component({
   selector: 'app-admin-service-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, AppIconComponent],
   template: `
   <div class="page-head">
     <div><div class="badge">Services</div><h2 class="section-title">{{ editMode ? 'Edit Service' : 'Add Service' }}</h2></div>
@@ -17,7 +18,7 @@ import { AgencyServiceService } from '../../core/services/agency-service.service
   <form class="card" style="padding:24px;" [formGroup]="form" (ngSubmit)="submit()">
     <div class="admin-form-preview">
       <div class="card preview-card">
-        <div class="service-icon">{{ iconPreview }}</div>
+        <div class="service-icon"><app-icon [name]="iconPreview"></app-icon></div>
         <div style="margin-top:16px;font-weight:800;">{{ form.value.title || 'Service title' }}</div>
         <div class="badge" style="margin-top:10px;">{{ form.value.category || 'Category' }}</div>
         <p class="section-text" style="margin-top:14px;">{{ form.value.description || 'Service description preview.' }}</p>
@@ -79,15 +80,16 @@ export class AdminServiceFormComponent implements OnInit {
   get iconPreview(): string {
     const value = this.form.value.icon || 'star';
     const map: Record<string, string> = {
-      star: '★',
-      file: '📄',
-      plane: '✈',
-      search: '🔎',
-      radar: '📡',
-      report: '📋',
-      trophy: '🏆'
+      star: 'star',
+      file: 'file-text',
+      plane: 'plane',
+      search: 'search',
+      radar: 'radar',
+      report: 'clipboard-list',
+      trophy: 'trophy',
+      contract: 'pen-line'
     };
-    return map[value] || '⚽';
+    return map[value] || 'football';
   }
 
   submit(): void {

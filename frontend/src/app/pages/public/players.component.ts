@@ -1,35 +1,36 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import { Player } from '../../core/models/site.models';
 import { PlayerService } from '../../core/services/player.service';
 import { PlayerModalComponent } from '../../shared/player-modal.component';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, FormsModule, PlayerModalComponent],
+  imports: [CommonModule, FormsModule, PlayerModalComponent, TranslateModule],
   template: `
   <section class="section" style="padding-top:120px;">
     <div class="container">
       <div class="page-head">
         <div>
-          <div class="badge">Our Players</div>
-          <h1 class="section-title">Search, browse and view profiles</h1>
-          <p class="section-text">The page includes search at the top and pagination so you can manage 30 players or more.</p>
+          <div class="badge">{{ 'PLAYERS.TITLE' | translate }}</div>
+          <h1 class="section-title">{{ 'PLAYERS.PAGE_TITLE' | translate }}</h1>
+          <p class="section-text">{{ 'PLAYERS.PAGE_TEXT' | translate }}</p>
         </div>
       </div>
 
       <div class="card" style="padding:18px;margin-bottom:22px;">
         <div class="toolbar">
-          <input class="input" style="max-width:340px;" [(ngModel)]="searchTerm" placeholder="Search by player, nationality or club">
+          <input class="input" style="max-width:340px;" [(ngModel)]="searchTerm" [placeholder]="'PLAYERS.SEARCH_SHORT' | translate">
           <select class="select" style="max-width:220px;" [(ngModel)]="selectedPosition">
-            <option value="">All positions</option>
+            <option value="">{{ 'PLAYERS.ALL_POSITIONS' | translate }}</option>
             <option *ngFor="let position of positions" [value]="position">{{ position }}</option>
           </select>
           <select class="select" style="max-width:220px;" [(ngModel)]="pageSize">
-            <option [ngValue]="6">6 per page</option>
-            <option [ngValue]="9">9 per page</option>
-            <option [ngValue]="12">12 per page</option>
+            <option [ngValue]="6">{{ 'PLAYERS.PER_PAGE' | translate:{ count: 6 } }}</option>
+            <option [ngValue]="9">{{ 'PLAYERS.PER_PAGE' | translate:{ count: 9 } }}</option>
+            <option [ngValue]="12">{{ 'PLAYERS.PER_PAGE' | translate:{ count: 12 } }}</option>
           </select>
         </div>
       </div>
@@ -42,14 +43,14 @@ import { PlayerModalComponent } from '../../shared/player-modal.component';
             <div class="muted">{{ player.position }} • {{ player.nationality }}</div>
             <div class="muted" style="margin-top:6px;">{{ player.currentClub }}</div>
             <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;">
-              <button class="btn btn-primary" (click)="selectedPlayer = player">View Profile</button>
+              <button class="btn btn-primary" (click)="selectedPlayer = player">{{ 'PLAYERS.VIEW_PROFILE' | translate }}</button>
             </div>
           </div>
         </article>
       </div>
 
       <ng-template #empty>
-        <div class="card empty-state">No players found with the current search.</div>
+        <div class="card empty-state">{{ 'PLAYERS.EMPTY' | translate }}</div>
       </ng-template>
 
       <div class="pagination" *ngIf="totalPages > 1">

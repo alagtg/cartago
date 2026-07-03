@@ -1,17 +1,18 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 import { AgencyServiceService } from '../../core/services/agency-service.service';
 import { AgencyService } from '../../core/models/site.models';
 
 @Component({
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule],
   template: `
   <section class="section" style="padding-top:120px;">
     <div class="container">
-      <div class="badge">Services</div>
-      <h1 class="section-title">Support for players and clubs</h1>
-      <p class="section-text">Every service below is loaded from the backend and can be managed by the admin area.</p>
+      <div class="badge">{{ 'SERVICES.TITLE' | translate }}</div>
+      <h1 class="section-title">{{ 'SERVICES.PAGE_TITLE' | translate }}</h1>
+      <p class="section-text">{{ 'SERVICES.PAGE_TEXT' | translate }}</p>
 
       <div class="feature-grid" style="margin-top:26px;">
         <div class="card" style="padding:24px;" *ngFor="let item of services">

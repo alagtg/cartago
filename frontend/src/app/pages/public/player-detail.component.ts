@@ -1,13 +1,14 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { PlayerService } from '../../core/services/player.service';
 import { Player } from '../../core/models/site.models';
 
 @Component({
   selector: 'app-player-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, TranslateModule],
   template: `
   <section class="player-cv" *ngIf="player">
     <div class="container">
@@ -18,8 +19,8 @@ import { Player } from '../../core/models/site.models';
             <div class="player-cv-brand">
               <img src="/assets/brand/cartago-logo.png" alt="Cartago logo" style="width:78px;height:78px;border-radius:18px;background:rgba(17,34,65,.92);padding:10px;">
               <div>
-                <div class="badge">Player Profile</div>
-                <div class="muted" style="margin-top:8px;">Automatically generated from the latest profile data.</div>
+                <div class="badge">{{ 'PLAYERS.PROFILE' | translate }}</div>
+                <div class="muted" style="margin-top:8px;">{{ 'PLAYERS.AUTO_PROFILE' | translate }}</div>
               </div>
             </div>
             <h1 class="section-title" style="margin-top:18px;">{{ player.fullName }}</h1>
@@ -27,23 +28,23 @@ import { Player } from '../../core/models/site.models';
 
             <div class="player-cv-grid" style="margin-top:20px;">
               <div class="card stat-card">
-                <div class="muted">Strong Foot</div>
+                <div class="muted">{{ 'PLAYERS.STRONG_FOOT' | translate }}</div>
                 <div class="stat-value">{{ player.strongFoot }}</div>
               </div>
               <div class="card stat-card">
-                <div class="muted">Height / Weight</div>
+                <div class="muted">{{ 'PLAYERS.HEIGHT_WEIGHT' | translate }}</div>
                 <div class="stat-value">{{ player.height }} cm / {{ player.weight }} kg</div>
               </div>
               <div class="card stat-card">
-                <div class="muted">Minutes Played</div>
+                <div class="muted">{{ 'PLAYERS.MINUTES' | translate }}</div>
                 <div class="stat-value">{{ player.minutesPlayed }}</div>
               </div>
             </div>
 
             <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:20px;">
-              <a href="/#players" class="btn btn-secondary">Back to Home Players</a>
-              <a class="btn btn-primary" *ngIf="player.technicalReportUrl" [href]="player.technicalReportUrl" target="_blank">Technical Report</a>
-              <a class="btn btn-secondary" *ngIf="player.videoUrl" [href]="player.videoUrl" target="_blank">Highlights Video</a>
+              <a href="/#players" class="btn btn-secondary">{{ 'PLAYERS.BACK_HOME' | translate }}</a>
+              <a class="btn btn-primary" *ngIf="player.technicalReportUrl" [href]="player.technicalReportUrl" target="_blank">{{ 'PLAYERS.TECHNICAL_REPORT' | translate }}</a>
+              <a class="btn btn-secondary" *ngIf="player.videoUrl" [href]="player.videoUrl" target="_blank">{{ 'PLAYERS.HIGHLIGHTS' | translate }}</a>
             </div>
           </div>
         </div>
@@ -52,39 +53,39 @@ import { Player } from '../../core/models/site.models';
       <div class="section" style="padding-top:26px;">
         <div class="player-cv-grid">
           <div class="card stat-card">
-            <div class="muted">Matches Played</div>
+            <div class="muted">{{ 'PLAYERS.MATCHES' | translate }}</div>
             <div class="stat-value">{{ player.matchesPlayed }}</div>
           </div>
           <div class="card stat-card">
-            <div class="muted">Goals</div>
+            <div class="muted">{{ 'PLAYERS.GOALS' | translate }}</div>
             <div class="stat-value">{{ player.goals }}</div>
           </div>
           <div class="card stat-card">
-            <div class="muted">Assists</div>
+            <div class="muted">{{ 'PLAYERS.ASSISTS' | translate }}</div>
             <div class="stat-value">{{ player.assists }}</div>
           </div>
         </div>
 
         <div class="split" style="margin-top:24px;align-items:start;">
           <div class="card preview-card">
-            <div class="badge">Profile Overview</div>
-            <h3 style="margin-top:16px;">Professional CV style presentation</h3>
-            <p class="section-text">This page updates automatically with the player photo, club, logo, statistics and links you enter from the admin interface. It stays presentable even when the underlying data changes.</p>
+            <div class="badge">{{ 'PLAYERS.OVERVIEW' | translate }}</div>
+            <h3 style="margin-top:16px;">{{ 'PLAYERS.CV_TITLE' | translate }}</h3>
+            <p class="section-text">{{ 'PLAYERS.CV_TEXT' | translate }}</p>
             <div class="grid" style="margin-top:16px;grid-template-columns:repeat(2,minmax(0,1fr));">
-              <div class="card stat-card"><b>Date of Birth</b><div class="muted">{{ player.dateOfBirth | date:'longDate' }}</div></div>
-              <div class="card stat-card"><b>Nationality</b><div class="muted">{{ player.nationality }}</div></div>
-              <div class="card stat-card"><b>Current Club</b><div class="muted">{{ player.currentClub }}</div></div>
-              <div class="card stat-card"><b>Contract</b><div class="muted">{{ player.contractStatus }}</div></div>
+              <div class="card stat-card"><b>{{ 'PLAYERS.DOB' | translate }}</b><div class="muted">{{ player.dateOfBirth | date:'longDate' }}</div></div>
+              <div class="card stat-card"><b>{{ 'PLAYERS.NATIONALITY' | translate }}</b><div class="muted">{{ player.nationality }}</div></div>
+              <div class="card stat-card"><b>{{ 'PLAYERS.CURRENT_CLUB' | translate }}</b><div class="muted">{{ player.currentClub }}</div></div>
+              <div class="card stat-card"><b>{{ 'PLAYERS.CONTRACT' | translate }}</b><div class="muted">{{ player.contractStatus }}</div></div>
             </div>
           </div>
 
           <div class="card preview-card">
-            <div class="badge">Agency Contact</div>
-            <h3 style="margin-top:16px;">Need more details?</h3>
-            <p class="section-text">Cartago Football Agency can share scouting information, video analysis and technical follow-up based on the current player profile.</p>
+            <div class="badge">{{ 'PLAYERS.AGENCY_CONTACT' | translate }}</div>
+            <h3 style="margin-top:16px;">{{ 'PLAYERS.NEED_DETAILS' | translate }}</h3>
+            <p class="section-text">{{ 'PLAYERS.CONTACT_TEXT' | translate }}</p>
             <div class="grid" style="margin-top:16px;">
-              <a class="btn btn-primary" href="/#contact">Contact The Agency</a>
-              <a class="btn btn-secondary" routerLink="/apply/club">Club Request</a>
+              <a class="btn btn-primary" href="/#contact">{{ 'PLAYERS.CONTACT_AGENCY' | translate }}</a>
+              <a class="btn btn-secondary" routerLink="/apply/club">{{ 'ACTIONS.CLUB_REQUEST' | translate }}</a>
             </div>
           </div>
         </div>
