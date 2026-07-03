@@ -98,7 +98,10 @@
     "MESSAGE_PLACEHOLDER": "Tu mensaje...",
     "SEND": "Enviar mensaje",
     "SENDING": "Enviando...",
-    "SUCCESS": "Mensaje enviado correctamente."
+    "SUCCESS": "Mensaje enviado correctamente.",
+    "LOGIN_REQUIRED": "Inicia sesión para enviar un mensaje.",
+    "SEND_ERROR": "No se puede enviar el mensaje en este momento.",
+    "CONNECTED_AS": "Conectado como"
   },
   "APPLY_PLAYER": {
     "BADGE": "Solicitud jugador",
@@ -217,6 +220,18 @@
     "DELETE_PLAYER_CONFIRM": "¿Eliminar este jugador?",
     "DELETE_MEMBER_CONFIRM": "¿Eliminar este miembro del equipo?",
     "DELETE_SERVICE_CONFIRM": "¿Eliminar este servicio?",
-    "DELETE_MESSAGE_CONFIRM": "¿Eliminar este mensaje?"
+    "DELETE_MESSAGE_CONFIRM": "¿Eliminar este mensaje?",
+    "RECEIVED_CLUB_CONTACTS": "Contactos de clubes recibidos",
+    "RECEIVED_PLAYER_CONTACTS": "Contactos de jugadores recibidos",
+    "CLUB": "Club",
+    "COUNTRY": "País",
+    "MANAGER": "Responsable",
+    "BUDGET": "Presupuesto",
+    "ACTION": "Acción",
+    "OPEN_DETAIL": "Abrir detalle",
+    "EDIT_PLAYER": "Editar jugador",
+    "CREATE_PLAYER": "Añadir jugador",
+    "EDIT_SERVICE": "Editar servicio",
+    "CREATE_SERVICE": "Añadir servicio"
   }
 }

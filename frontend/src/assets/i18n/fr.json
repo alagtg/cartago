@@ -98,7 +98,10 @@
     "MESSAGE_PLACEHOLDER": "Votre message...",
     "SEND": "Envoyer le message",
     "SENDING": "Envoi...",
-    "SUCCESS": "Message envoyé avec succès."
+    "SUCCESS": "Message envoyé avec succès.",
+    "LOGIN_REQUIRED": "Veuillez vous connecter pour envoyer un message.",
+    "SEND_ERROR": "Impossible d'envoyer le message pour le moment.",
+    "CONNECTED_AS": "Connecté en tant que"
   },
   "APPLY_PLAYER": {
     "BADGE": "Candidature joueur",
@@ -225,6 +228,10 @@
     "MANAGER": "Responsable",
     "BUDGET": "Budget",
     "ACTION": "Action",
-    "OPEN_DETAIL": "Ouvrir le détail"
+    "OPEN_DETAIL": "Ouvrir le détail",
+    "EDIT_PLAYER": "Modifier le joueur",
+    "CREATE_PLAYER": "Ajouter un joueur",
+    "EDIT_SERVICE": "Modifier le service",
+    "CREATE_SERVICE": "Ajouter un service"
   }
 }

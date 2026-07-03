@@ -1,49 +1,47 @@
-using System.Net;
-using System.Net.Mail;
 using CartagoAgency.API.Options;
 using Microsoft.Extensions.Options;
 
 namespace CartagoAgency.API.Services;
 
-public class EmailNotificationService(IOptions<SmtpSettings> smtpOptions, ILogger<EmailNotificationService> logger)
+public class EmailNotificationService(
+    HttpClient httpClient,
+    IOptions<EmailJsSettings> emailJsOptions,
+    ILogger<EmailNotificationService> logger)
 {
-    private readonly SmtpSettings _settings = smtpOptions.Value;
-    private readonly ILogger<EmailNotificationService> _logger = logger;
+    private readonly EmailJsSettings _settings = emailJsOptions.Value;
 
     public async Task SendAsync(string subject, string htmlBody)
     {
-        if (string.IsNullOrWhiteSpace(_settings.Host) || string.IsNullOrWhiteSpace(_settings.NotificationEmail) || string.IsNullOrWhiteSpace(_settings.FromEmail))
-        {
-            _logger.LogInformation("SMTP not configured. Skipping email notification for subject {Subject}", subject);
-            return;
-        }
-
         try
         {
-            using var message = new MailMessage
+            var payload = new
             {
-                From = new MailAddress(_settings.FromEmail, _settings.FromName),
-                Subject = subject,
-                Body = htmlBody,
-                IsBodyHtml = true
+                service_id = _settings.ServiceId,
+                template_id = _settings.TemplateId,
+                user_id = _settings.PublicKey,
+                accessToken = string.IsNullOrWhiteSpace(_settings.PrivateKey) ? null : _settings.PrivateKey,
+                template_params = new
+                {
+                    subject,
+                    html_body = htmlBody
+                }
             };
-            message.To.Add(_settings.NotificationEmail);
+            using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(8));
 
-            using var client = new SmtpClient(_settings.Host, _settings.Port)
+            var response = await httpClient.PostAsJsonAsync(
+                "https://api.emailjs.com/api/v1.0/email/send",
+                payload,
+                cts.Token);
+
+            if (!response.IsSuccessStatusCode)
             {
-                EnableSsl = _settings.EnableSsl,
-                DeliveryMethod = SmtpDeliveryMethod.Network,
-                UseDefaultCredentials = false,
-                Credentials = string.IsNullOrWhiteSpace(_settings.Username)
-                    ? CredentialCache.DefaultNetworkCredentials
-                    : new NetworkCredential(_settings.Username, _settings.Password)
-            };
-
-            await client.SendMailAsync(message);
+                var error = await response.Content.ReadAsStringAsync();
+                logger.LogWarning("EmailJS error: {Error}", error);
+            }
         }
         catch (Exception ex)
         {
-            _logger.LogWarning(ex, "Unable to send email notification for subject {Subject}", subject);
+            logger.LogWarning(ex, "EmailJS send failed.");
         }
     }
 }

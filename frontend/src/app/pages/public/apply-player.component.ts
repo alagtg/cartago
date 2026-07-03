@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { PlayerApplicationService } from '../../core/services/player-application.service';
+import { GoogleEmailService } from '../../core/services/google-email.service';
 
 @Component({
   standalone: true,
@@ -27,7 +28,7 @@ import { PlayerApplicationService } from '../../core/services/player-application
           <div><label>{{ 'APPLY_PLAYER.CONTRACT' | translate }}</label><input class="input" formControlName="contractSituation"></div>
           <div><label>{{ 'APPLY_PLAYER.VIDEO' | translate }}</label><input class="input" formControlName="videoLink"></div>
           <div><label>{{ 'APPLY_PLAYER.PHONE' | translate }}</label><input class="input" formControlName="phoneNumber"></div>
-          <div><label>{{ 'APPLY_PLAYER.EMAIL' | translate }}</label><input class="input" formControlName="email"></div>
+          <div><label>{{ 'APPLY_PLAYER.EMAIL' | translate }}</label><input class="input" formControlName="email" type="email" placeholder="Connecter votre email professionnel" readonly (click)="connectGoogleEmail()"></div>
         </div>
         <div style="margin-top:16px;">
           <label>{{ 'APPLY_PLAYER.NOTES' | translate }}</label>
@@ -35,8 +36,9 @@ import { PlayerApplicationService } from '../../core/services/player-application
         </div>
 
         <div style="margin-top:18px;display:flex;gap:12px;align-items:center;">
-          <button class="btn btn-primary" [disabled]="form.invalid || loading">{{ (loading ? 'APPLY_PLAYER.SUBMITTING' : 'APPLY_PLAYER.SUBMIT') | translate }}</button>
+          <button class="btn btn-primary" [disabled]="loading">{{ (loading ? 'APPLY_PLAYER.SUBMITTING' : 'APPLY_PLAYER.SUBMIT') | translate }}</button>
           <span class="muted" *ngIf="success">{{ 'APPLY_PLAYER.SUCCESS' | translate }}</span>
+          <span class="field-error" *ngIf="error">{{ error }}</span>
         </div>
       </form>
     </div>
@@ -46,8 +48,10 @@ import { PlayerApplicationService } from '../../core/services/player-application
 export class ApplyPlayerComponent {
   private fb = inject(FormBuilder);
   private api = inject(PlayerApplicationService);
+  private googleEmail = inject(GoogleEmailService);
   loading = false;
   success = false;
+  error = '';
 
   form = this.fb.group({
     fullName: ['', Validators.required],
@@ -65,16 +69,39 @@ export class ApplyPlayerComponent {
     additionalNotes: ['']
   });
 
+  connectGoogleEmail(): void {
+    this.googleEmail.connect().then((profile) => {
+      this.form.patchValue({ email: profile.email });
+      this.error = '';
+    }).catch((error: Error) => {
+      this.error = error.message;
+    });
+  }
+
   submit(): void {
-    if (this.form.invalid) return;
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      this.error = this.form.controls.email.invalid
+        ? 'Cliquez sur le champ Email pour connecter votre compte Google.'
+        : 'Veuillez remplir tous les champs obligatoires.';
+      return;
+    }
+
+    const payload = this.form.getRawValue() as any;
     this.loading = true;
-    this.api.create(this.form.getRawValue() as any).subscribe({
+    this.success = false;
+    this.error = '';
+
+    this.api.create(payload).subscribe({
       next: () => {
         this.success = true;
         this.loading = false;
         this.form.reset();
       },
-      error: () => this.loading = false
+      error: () => {
+        this.loading = false;
+        this.error = "Impossible d'envoyer la candidature pour le moment.";
+      }
     });
   }
 }

@@ -2,17 +2,18 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { PlayerService } from '../../core/services/player.service';
 
 @Component({
   selector: 'app-admin-player-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, TranslateModule],
   template: `
   <div class="page-head">
     <div>
-      <div class="badge">Players</div>
-      <h2 class="section-title">{{ editMode ? 'Edit Player' : 'Add Player' }}</h2>
+      <div class="badge">{{ 'ADMIN.PLAYERS' | translate }}</div>
+      <h2 class="section-title">{{ (editMode ? 'ADMIN.EDIT_PLAYER' : 'ADMIN.CREATE_PLAYER') | translate }}</h2>
     </div>
     <a routerLink="/admin/players" class="btn btn-secondary">Back</a>
   </div>

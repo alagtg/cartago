@@ -1,3 +1,4 @@
+using System.Net;
 using CartagoAgency.API.Data;
 using CartagoAgency.API.DTOs;
 using CartagoAgency.API.Models;
@@ -15,15 +16,30 @@ public class ContactMessagesController(AppDbContext db, EmailNotificationService
     [HttpPost]
     public async Task<ActionResult<ContactMessage>> Create(ContactMessage entity)
     {
+        if (string.IsNullOrWhiteSpace(entity.Email))
+        {
+            return BadRequest(new { message = "Veuillez connecter votre compte Google." });
+        }
+
         entity.Id = 0;
         entity.Status = "Unread";
         entity.CreatedAt = DateTime.UtcNow;
+
         db.ContactMessages.Add(entity);
         await db.SaveChangesAsync();
 
-        await emails.SendAsync(
-            $"New contact message — {entity.Subject}",
-            $"<h2>New Contact Message</h2><p><b>Name:</b> {entity.Name}</p><p><b>Email:</b> {entity.Email}</p><p><b>Subject:</b> {entity.Subject}</p><p><b>Message:</b><br/>{entity.Message}</p>");
+        try
+        {
+            await emails.SendAsync(
+                $"New contact message — {entity.Subject}",
+                $@"
+<h2>New Contact Message</h2>
+<p><b>Email:</b> {WebUtility.HtmlEncode(entity.Email)}</p>
+<p><b>Name:</b> {WebUtility.HtmlEncode(entity.Name)}</p>
+<p><b>Subject:</b> {WebUtility.HtmlEncode(entity.Subject)}</p>
+<p><b>Message:</b><br/>{WebUtility.HtmlEncode(entity.Message)}</p>");
+        }
+        catch { }
 
         return Ok(entity);
     }
@@ -49,8 +65,10 @@ public class ContactMessagesController(AppDbContext db, EmailNotificationService
     {
         var entity = await db.ContactMessages.FindAsync(id);
         if (entity is null) return NotFound();
+
         entity.Status = dto.Status;
         await db.SaveChangesAsync();
+
         return NoContent();
     }
 
@@ -60,8 +78,10 @@ public class ContactMessagesController(AppDbContext db, EmailNotificationService
     {
         var entity = await db.ContactMessages.FindAsync(id);
         if (entity is null) return NotFound();
+
         db.ContactMessages.Remove(entity);
         await db.SaveChangesAsync();
+
         return NoContent();
     }
 }

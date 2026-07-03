@@ -21,7 +21,7 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(TranslateModule),
 
     provideTranslateService({
-      defaultLanguage: 'en',
+      fallbackLang: 'en',
       loader: provideTranslateHttpLoader({
         prefix: './assets/i18n/',
         suffix: '.json'

@@ -29,9 +29,8 @@ if (string.IsNullOrWhiteSpace(connectionString))
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connectionString));
 
-builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("Smtp"));
-builder.Services.AddScoped<TokenService>();
-builder.Services.AddScoped<EmailNotificationService>();
+builder.Services.Configure<EmailJsSettings>(builder.Configuration.GetSection("EmailJs"));
+builder.Services.AddHttpClient<EmailNotificationService>();
 
 var jwtKey = builder.Configuration["Jwt:Key"] ?? "CHANGE_THIS_TO_A_LONG_SECRET_KEY_123456789_CARTAGO";
 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));

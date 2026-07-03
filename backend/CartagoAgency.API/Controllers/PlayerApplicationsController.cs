@@ -1,3 +1,4 @@
+using System.Net;
 using CartagoAgency.API.Data;
 using CartagoAgency.API.DTOs;
 using CartagoAgency.API.Models;
@@ -15,6 +16,11 @@ public class PlayerApplicationsController(AppDbContext db, EmailNotificationServ
     [HttpPost]
     public async Task<ActionResult<PlayerApplication>> Create(PlayerApplication entity)
     {
+        if (string.IsNullOrWhiteSpace(entity.Email))
+        {
+            return BadRequest(new { message = "Veuillez connecter votre compte Google." });
+        }
+
         entity.Id = 0;
         entity.Status = "New";
         entity.CreatedAt = DateTime.UtcNow;
@@ -22,9 +28,24 @@ public class PlayerApplicationsController(AppDbContext db, EmailNotificationServ
         db.PlayerApplications.Add(entity);
         await db.SaveChangesAsync();
 
-        await emails.SendAsync(
-            $"New player application — {entity.FullName}",
-            $"<h2>New Player Application</h2><p><b>Name:</b> {entity.FullName}</p><p><b>Nationality:</b> {entity.Nationality}</p><p><b>Position:</b> {entity.Position}</p><p><b>Current Club:</b> {entity.CurrentClub}</p><p><b>Email:</b> {entity.Email}</p><p><b>Phone:</b> {entity.PhoneNumber}</p><p><b>Strong Foot:</b> {entity.StrongFoot}</p><p><b>Contract Situation:</b> {entity.ContractSituation}</p><p><b>Video:</b> {entity.VideoLink}</p><p><b>Notes:</b><br/>{entity.AdditionalNotes}</p>");
+        try
+        {
+            await emails.SendAsync(
+                $"New player application — {entity.FullName}",
+                $@"
+<h2>New Player Application</h2>
+<p><b>Email:</b> {WebUtility.HtmlEncode(entity.Email)}</p>
+<p><b>Name:</b> {WebUtility.HtmlEncode(entity.FullName)}</p>
+<p><b>Nationality:</b> {WebUtility.HtmlEncode(entity.Nationality)}</p>
+<p><b>Position:</b> {WebUtility.HtmlEncode(entity.Position)}</p>
+<p><b>Current Club:</b> {WebUtility.HtmlEncode(entity.CurrentClub)}</p>
+<p><b>Phone:</b> {WebUtility.HtmlEncode(entity.PhoneNumber)}</p>
+<p><b>Strong Foot:</b> {WebUtility.HtmlEncode(entity.StrongFoot)}</p>
+<p><b>Contract Situation:</b> {WebUtility.HtmlEncode(entity.ContractSituation)}</p>
+<p><b>Video:</b> {WebUtility.HtmlEncode(entity.VideoLink)}</p>
+<p><b>Notes:</b><br/>{WebUtility.HtmlEncode(entity.AdditionalNotes)}</p>");
+        }
+        catch { }
 
         return Ok(entity);
     }
@@ -50,8 +71,10 @@ public class PlayerApplicationsController(AppDbContext db, EmailNotificationServ
     {
         var entity = await db.PlayerApplications.FindAsync(id);
         if (entity is null) return NotFound();
+
         entity.Status = dto.Status;
         entity.AdminNote = dto.AdminNote;
+
         await db.SaveChangesAsync();
         return NoContent();
     }
@@ -62,8 +85,10 @@ public class PlayerApplicationsController(AppDbContext db, EmailNotificationServ
     {
         var entity = await db.PlayerApplications.FindAsync(id);
         if (entity is null) return NotFound();
+
         db.PlayerApplications.Remove(entity);
         await db.SaveChangesAsync();
+
         return NoContent();
     }
 }

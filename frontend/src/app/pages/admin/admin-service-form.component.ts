@@ -2,16 +2,17 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { AgencyServiceService } from '../../core/services/agency-service.service';
 import { AppIconComponent } from '../../shared/app-icon.component';
 
 @Component({
   selector: 'app-admin-service-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, AppIconComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, AppIconComponent, TranslateModule],
   template: `
   <div class="page-head">
-    <div><div class="badge">Services</div><h2 class="section-title">{{ editMode ? 'Edit Service' : 'Add Service' }}</h2></div>
+    <div><div class="badge">{{ 'ADMIN.SERVICES' | translate }}</div><h2 class="section-title">{{ (editMode ? 'ADMIN.EDIT_SERVICE' : 'ADMIN.CREATE_SERVICE') | translate }}</h2></div>
     <a routerLink="/admin/services" class="btn btn-secondary">Back</a>
   </div>
 

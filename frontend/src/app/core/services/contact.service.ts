@@ -2,14 +2,14 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { API_BASE_URL } from '../config/api.config';
 import { ContactMessage } from '../models/site.models';
-import { Observable } from 'rxjs';
+import { Observable, timeout } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class ContactService {
   private http = inject(HttpClient);
 
   send(payload: Omit<ContactMessage, 'id' | 'createdAt' | 'status'>): Observable<ContactMessage> {
-    return this.http.post<ContactMessage>(`${API_BASE_URL}/contact-messages`, payload);
+    return this.http.post<ContactMessage>(`${API_BASE_URL}/contact-messages`, payload).pipe(timeout(12000));
   }
 
   getAdminAll(): Observable<ContactMessage[]> {

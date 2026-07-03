@@ -9,6 +9,7 @@ import { TeamService } from '../../core/services/team.service';
 import { AgencyServiceService } from '../../core/services/agency-service.service';
 import { SettingsService } from '../../core/services/settings.service';
 import { ContactService } from '../../core/services/contact.service';
+import { GoogleEmailService } from '../../core/services/google-email.service';
 import { Player, TeamMember, AgencyService, SiteSetting } from '../../core/models/site.models';
 import { PlayerModalComponent } from '../../shared/player-modal.component';
 import { AppIconComponent } from '../../shared/app-icon.component';
@@ -187,7 +188,7 @@ import { AppIconComponent } from '../../shared/app-icon.component';
         <article class="card contact-card">
           <div class="footer-title">{{ 'HOME.FOLLOW_US' | translate }}</div>
           <div class="grid" style="gap:12px;margin-top:12px;">
-            <div><b>Email</b><div class="muted" style="margin-top:6px;">contact&#64;cartagoagency.com</div></div>
+            <div><b>Email</b><div class="muted" style="margin-top:6px;">CartagoAgency&#64;hotmail.com</div></div>
             <div><b>Phone</b><div class="muted" style="margin-top:6px;">+216 00 000 000</div></div>
             <div><b>Instagram</b><div class="muted" style="margin-top:6px;">&#64;cartago.sports.agency</div></div>
           </div>
@@ -195,15 +196,9 @@ import { AppIconComponent } from '../../shared/app-icon.component';
       </div>
 
       <form class="card" style="padding:24px;" [formGroup]="contactForm" (ngSubmit)="submitContact()">
-        <div class="form-grid">
-          <div>
-            <label>{{ 'CONTACT.NAME' | translate }}</label>
-            <input class="input" formControlName="name" [placeholder]="'CONTACT.NAME_PLACEHOLDER' | translate">
-          </div>
-          <div>
-            <label>{{ 'CONTACT.EMAIL' | translate }}</label>
-            <input class="input" formControlName="email" [placeholder]="'CONTACT.EMAIL_PLACEHOLDER' | translate">
-          </div>
+        <div style="margin-top:16px;">
+          <label>{{ 'CONTACT.EMAIL' | translate }}</label>
+          <input class="input" formControlName="email" type="email" placeholder="Connecter votre email professionnel" readonly (click)="connectGoogleEmail()">
         </div>
         <div style="margin-top:16px;">
           <label>{{ 'CONTACT.SUBJECT' | translate }}</label>
@@ -214,7 +209,7 @@ import { AppIconComponent } from '../../shared/app-icon.component';
           <textarea class="textarea" formControlName="message" [placeholder]="'CONTACT.MESSAGE_PLACEHOLDER' | translate"></textarea>
         </div>
         <div style="margin-top:18px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
-          <button class="btn btn-primary" [disabled]="contactForm.invalid || contactLoading">{{ (contactLoading ? 'CONTACT.SENDING' : 'CONTACT.SEND') | translate }}</button>
+          <button class="btn btn-primary" [disabled]="contactLoading">{{ (contactLoading ? 'CONTACT.SENDING' : 'CONTACT.SEND') | translate }}</button>
           <span class="muted" *ngIf="contactSuccess">{{ 'CONTACT.SUCCESS' | translate }}</span>
           <span class="field-error" *ngIf="contactError">{{ contactError }}</span>
         </div>
@@ -231,6 +226,7 @@ export class HomeComponent implements OnInit {
   private servicesApi = inject(AgencyServiceService);
   private settingsApi = inject(SettingsService);
   private contactApi = inject(ContactService);
+  private googleEmail = inject(GoogleEmailService);
   private fb = inject(FormBuilder);
 
   players: Player[] = [];
@@ -247,17 +243,16 @@ export class HomeComponent implements OnInit {
   contactError = '';
 
   contactForm = this.fb.group({
-    name: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
     subject: ['', Validators.required],
     message: ['', Validators.required]
   });
 
   ngOnInit(): void {
-    this.playersApi.getAll().subscribe((res) => this.players = res);
-    this.teamApi.getAll().subscribe((res) => this.team = res);
-    this.servicesApi.getAll().subscribe((res) => this.services = res);
-    this.settingsApi.getAll().subscribe((res) => this.settings = res);
+    this.playersApi.getAll().subscribe({ next: (res) => this.players = res, error: () => this.players = [] });
+    this.teamApi.getAll().subscribe({ next: (res) => this.team = res, error: () => this.team = [] });
+    this.servicesApi.getAll().subscribe({ next: (res) => this.services = res, error: () => this.services = [] });
+    this.settingsApi.getAll().subscribe({ next: (res) => this.settings = res, error: () => this.settings = [] });
   }
 
   get positions(): string[] {
@@ -308,21 +303,56 @@ export class HomeComponent implements OnInit {
     return map[icon] || 'football';
   }
 
+  connectGoogleEmail(): void {
+    this.googleEmail.connect().then((profile) => {
+      this.contactForm.patchValue({ email: profile.email });
+      this.contactError = '';
+    }).catch((error: Error) => {
+      this.contactError = error.message;
+    });
+  }
+
   submitContact(): void {
-    if (this.contactForm.invalid) return;
+    if (this.contactForm.invalid) {
+      this.contactForm.markAllAsTouched();
+      this.contactError = this.contactForm.controls.email.invalid
+        ? 'Cliquez sur le champ Email pour connecter votre compte Google.'
+        : 'Veuillez remplir tous les champs obligatoires.';
+      return;
+    }
     this.contactLoading = true;
     this.contactSuccess = false;
     this.contactError = '';
-    this.contactApi.send(this.contactForm.getRawValue() as any).subscribe({
+    const { email, subject, message } = this.contactForm.getRawValue();
+    const payload = {
+      name: email || '',
+      email: email || '',
+      subject: subject || '',
+      message: message || ''
+    };
+    this.contactApi.send(payload).subscribe({
       next: () => {
         this.contactLoading = false;
         this.contactSuccess = true;
         this.contactForm.reset();
       },
-      error: () => {
+      error: (err) => {
         this.contactLoading = false;
-        this.contactError = 'Unable to send the message right now.';
+        console.error('Contact send failed', err);
+        this.contactError = this.formatContactError(err);
       }
     });
+  }
+
+  private formatContactError(err: any): string {
+    if (err?.name === 'TimeoutError') {
+      return 'Le serveur n’a pas répondu à temps. Réessayez ultérieurement.';
+    }
+    const detail = err?.error?.message || err?.message || err?.statusText;
+    if (detail) {
+      const status = err?.status ? ` (${err.status})` : '';
+      return `Impossible d'envoyer le message${status} : ${detail}`;
+    }
+    return "Impossible d'envoyer le message pour le moment.";
   }
 }

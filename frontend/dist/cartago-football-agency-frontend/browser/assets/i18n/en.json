@@ -98,7 +98,10 @@
     "MESSAGE_PLACEHOLDER": "Your message...",
     "SEND": "Send Message",
     "SENDING": "Sending...",
-    "SUCCESS": "Message sent successfully."
+    "SUCCESS": "Message sent successfully.",
+    "LOGIN_REQUIRED": "Please log in to send a message.",
+    "SEND_ERROR": "Unable to send the message right now.",
+    "CONNECTED_AS": "Connected as"
   },
   "APPLY_PLAYER": {
     "BADGE": "Player Application",
@@ -218,5 +221,17 @@
     "DELETE_MEMBER_CONFIRM": "Delete this team member?",
     "DELETE_SERVICE_CONFIRM": "Delete this service?",
     "DELETE_MESSAGE_CONFIRM": "Delete this message?"
+    ,"RECEIVED_CLUB_CONTACTS": "Received club contacts",
+    "RECEIVED_PLAYER_CONTACTS": "Received player contacts",
+    "CLUB": "Club",
+    "COUNTRY": "Country",
+    "MANAGER": "Manager",
+    "BUDGET": "Budget",
+    "ACTION": "Action",
+    "OPEN_DETAIL": "Open Detail"
+    ,"EDIT_PLAYER": "Edit Player",
+    "CREATE_PLAYER": "Add Player",
+    "EDIT_SERVICE": "Edit Service",
+    "CREATE_SERVICE": "Add Service"
   }
 }
