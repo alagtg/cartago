@@ -1,0 +1,27 @@
+Cartago Football Agency - Updated Fullstack Package
+
+Main updates in this version:
+- Home page redesigned to keep Players, Team, Services and Contact in one scrolling page.
+- Player pagination and search now live on the home page.
+- Mobile hamburger menu added in the public navbar.
+- Footer expanded with Quick Links, Services, Legal and brand block.
+- Team section now shows all team members on home.
+- Player modal improved; Open Full Page now goes to a presentable CV-style dynamic player page.
+- Admin create forms for Players, Team and Services rewritten for reliable create/update flow.
+- Contact Messages admin list now supports Open, Mark Read and Delete from the list.
+- Club Requests and Player Applications now use unique selectors to avoid Angular NG0912 collision.
+- Public Contact, Club Request and Player Application submissions can send email notifications if SMTP is configured.
+
+To enable email notifications, fill the Smtp section in backend/CartagoAgency.API/appsettings.json:
+- Host
+- Port
+- Username
+- Password
+- FromEmail
+- NotificationEmail
+
+Default frontend API URL:
+frontend/src/app/core/config/api.config.ts
+=> http://localhost:5000/api
+
+If your backend runs on another port, change only that file.
