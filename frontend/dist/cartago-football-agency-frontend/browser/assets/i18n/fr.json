@@ -1,0 +1,62 @@
+{
+  "NAV": {
+    "PLAYERS": "Joueurs",
+    "TEAM": "Équipe",
+    "SERVICES": "Services",
+    "CONTACT": "Contact",
+    "PLAYER_APPLICATION": "Candidature Joueur",
+    "CLUB_REQUEST": "Demande Club",
+    "ADMIN_LOGIN": "Connexion Admin"
+  },
+  "HOME": {
+    "TITLE": "Cartago Football Agency",
+    "SUBTITLE": "Représentation d’élite pour les talents du football dans le monde.",
+    "READY_TITLE": "Prêt à travailler avec nous ?",
+    "READY_TEXT": "Les joueurs, clubs et partenaires peuvent contacter l’agence directement.",
+    "GET_IN_TOUCH": "Contactez-nous",
+    "FOLLOW_US": "Suivez-nous"
+  },
+  "PLAYERS": {
+    "TITLE": "Nos Joueurs",
+    "SEARCH": "Rechercher un joueur...",
+    "VIEW_PROFILE": "Voir le profil",
+    "OPEN_FULL_PAGE": "Ouvrir la fiche complète"
+  },
+  "TEAM": {
+    "TITLE": "Notre Équipe",
+    "SUBTITLE": "Des professionnels expérimentés au service des talents du football dans le monde."
+  },
+  "SERVICES": {
+    "TITLE": "Services"
+  },
+  "CONTACT": {
+    "TITLE": "Contact",
+    "NAME": "Nom",
+    "NAME_PLACEHOLDER": "Votre nom",
+    "EMAIL": "Email",
+    "EMAIL_PLACEHOLDER": "votre@email.com",
+    "SUBJECT": "Sujet",
+    "SUBJECT_PLACEHOLDER": "Sujet",
+    "MESSAGE": "Message",
+    "MESSAGE_PLACEHOLDER": "Votre message...",
+    "SEND": "Envoyer le message"
+  },
+  "FOOTER": {
+    "AGENCY_TEXT": "Représentation d’élite pour les talents du football dans le monde.",
+    "QUICK_LINKS": "Liens rapides",
+    "SERVICES": "Services",
+    "PLAYER_REPRESENTATION": "Représentation des joueurs",
+    "SCOUTING": "Scouting",
+    "CONTRACT_MANAGEMENT": "Gestion des contrats",
+    "ADVISORY": "Conseil",
+    "LEGAL": "Juridique",
+    "PRIVACY_POLICY": "Politique de confidentialité",
+    "TERMS": "Conditions d’utilisation",
+    "COOKIE": "Politique des cookies",
+    "COPYRIGHT": "© 2026 Cartago Football Agency. Tous droits réservés."
+  },
+  "ACTIONS": {
+    "PLAYER_APPLICATION": "Candidature Joueur",
+    "CLUB_REQUEST": "Demande Club"
+  }
+}

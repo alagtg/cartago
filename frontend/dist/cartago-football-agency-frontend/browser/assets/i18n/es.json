@@ -1,0 +1,62 @@
+{
+  "NAV": {
+    "PLAYERS": "Jugadores",
+    "TEAM": "Equipo",
+    "SERVICES": "Servicios",
+    "CONTACT": "Contacto",
+    "PLAYER_APPLICATION": "Solicitud Jugador",
+    "CLUB_REQUEST": "Solicitud Club",
+    "ADMIN_LOGIN": "Acceso Admin"
+  },
+  "HOME": {
+    "TITLE": "Cartago Football Agency",
+    "SUBTITLE": "Representación de élite para talentos del fútbol en todo el mundo.",
+    "READY_TITLE": "¿Listo para trabajar juntos?",
+    "READY_TEXT": "Jugadores, clubes y socios pueden contactar a la agencia directamente.",
+    "GET_IN_TOUCH": "Contáctanos",
+    "FOLLOW_US": "Síguenos"
+  },
+  "PLAYERS": {
+    "TITLE": "Nuestros Jugadores",
+    "SEARCH": "Buscar jugador...",
+    "VIEW_PROFILE": "Ver perfil",
+    "OPEN_FULL_PAGE": "Abrir página completa"
+  },
+  "TEAM": {
+    "TITLE": "Nuestro Equipo",
+    "SUBTITLE": "Profesionales experimentados al servicio del talento futbolístico mundial."
+  },
+  "SERVICES": {
+    "TITLE": "Servicios"
+  },
+  "CONTACT": {
+    "TITLE": "Contacto",
+    "NAME": "Nombre",
+    "NAME_PLACEHOLDER": "Tu nombre",
+    "EMAIL": "Correo",
+    "EMAIL_PLACEHOLDER": "tu@email.com",
+    "SUBJECT": "Asunto",
+    "SUBJECT_PLACEHOLDER": "Asunto",
+    "MESSAGE": "Mensaje",
+    "MESSAGE_PLACEHOLDER": "Tu mensaje...",
+    "SEND": "Enviar mensaje"
+  },
+  "FOOTER": {
+    "AGENCY_TEXT": "Representación de élite para talentos del fútbol en todo el mundo.",
+    "QUICK_LINKS": "Enlaces rápidos",
+    "SERVICES": "Servicios",
+    "PLAYER_REPRESENTATION": "Representación de jugadores",
+    "SCOUTING": "Scouting",
+    "CONTRACT_MANAGEMENT": "Gestión de contratos",
+    "ADVISORY": "Asesoría",
+    "LEGAL": "Legal",
+    "PRIVACY_POLICY": "Política de privacidad",
+    "TERMS": "Términos de servicio",
+    "COOKIE": "Política de cookies",
+    "COPYRIGHT": "© 2026 Cartago Football Agency. Todos los derechos reservados."
+  },
+  "ACTIONS": {
+    "PLAYER_APPLICATION": "Solicitud Jugador",
+    "CLUB_REQUEST": "Solicitud Club"
+  }
+}
