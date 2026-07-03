@@ -65,6 +65,7 @@ builder.Services.AddCors(options =>
         .AllowAnyMethod();
     });
 });
+builder.Services.AddScoped<TokenService>();
 
 var app = builder.Build();
 
