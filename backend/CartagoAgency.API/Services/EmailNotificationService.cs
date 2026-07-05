@@ -19,7 +19,6 @@ public class EmailNotificationService(
                 service_id = _settings.ServiceId,
                 template_id = _settings.TemplateId,
                 user_id = _settings.PublicKey,
-                accessToken = string.IsNullOrWhiteSpace(_settings.PrivateKey) ? null : _settings.PrivateKey,
                 template_params = new
                 {
                     subject,
