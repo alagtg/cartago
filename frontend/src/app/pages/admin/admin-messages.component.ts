@@ -18,7 +18,7 @@ import { ContactMessage } from '../../core/models/site.models';
     <table>
       <thead><tr><th>{{ 'ADMIN.NAME' | translate }}</th><th>{{ 'ADMIN.EMAIL' | translate }}</th><th>{{ 'ADMIN.SUBJECT' | translate }}</th><th>{{ 'ADMIN.STATUS' | translate }}</th><th>{{ 'ADMIN.ACTIONS' | translate }}</th></tr></thead>
       <tbody>
-        <tr *ngFor="let item of messages">
+        <tr *ngFor="let item of pagedMessages">
           <td>{{ item.name }}</td>
           <td>{{ item.email }}</td>
           <td>{{ item.subject }}</td>
@@ -34,16 +34,41 @@ import { ContactMessage } from '../../core/models/site.models';
       </tbody>
     </table>
   </div>
+  <div class="pagination" *ngIf="totalPages > 1">
+    <button (click)="page = page - 1" [disabled]="page === 1">‹</button>
+    <button *ngFor="let p of pages" [class.active]="page === p" (click)="page = p">{{ p }}</button>
+    <button (click)="page = page + 1" [disabled]="page === totalPages">›</button>
+  </div>
   `
 })
 export class AdminMessagesComponent implements OnInit {
   private api = inject(ContactService);
   private translate = inject(TranslateService);
   messages: ContactMessage[] = [];
+  page = 1;
+  pageSize = 10;
+
   ngOnInit(): void { this.load(); }
 
   load(): void {
-    this.api.getAdminAll().subscribe((res) => this.messages = res);
+    this.api.getAdminAll().subscribe((res) => {
+      this.messages = res;
+      this.page = 1;
+    });
+  }
+
+  get totalPages(): number {
+    return Math.max(1, Math.ceil(this.messages.length / this.pageSize));
+  }
+
+  get pages(): number[] {
+    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  }
+
+  get pagedMessages(): ContactMessage[] {
+    if (this.page > this.totalPages) this.page = 1;
+    const start = (this.page - 1) * this.pageSize;
+    return this.messages.slice(start, start + this.pageSize);
   }
 
   markRead(id: number): void {

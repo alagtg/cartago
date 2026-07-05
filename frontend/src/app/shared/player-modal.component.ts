@@ -1,9 +1,10 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { Player } from '../core/models/site.models';
 import { AppIconComponent } from './app-icon.component';
+import { PlayerReportService } from '../core/services/player-report.service';
 
 @Component({
   selector: 'app-player-modal',
@@ -39,7 +40,7 @@ import { AppIconComponent } from './app-icon.component';
 
           <div style="display:flex;gap:12px;flex-wrap:wrap;">
             <a class="btn btn-primary" [routerLink]="['/players', player?.slug]" (click)="close.emit()">{{ 'PLAYERS.OPEN_FULL_PAGE' | translate }}</a>
-            <a class="btn btn-secondary" *ngIf="player?.technicalReportUrl" [href]="player?.technicalReportUrl" target="_blank">{{ 'PLAYERS.TECHNICAL_REPORT' | translate }}</a>
+            <button class="btn btn-secondary" type="button" (click)="printTechnicalReport()">{{ 'PLAYERS.TECHNICAL_REPORT' | translate }}</button>
             <a class="btn btn-secondary" *ngIf="player?.videoUrl" [href]="player?.videoUrl" target="_blank">{{ 'PLAYERS.HIGHLIGHTS' | translate }}</a>
           </div>
         </div>
@@ -49,6 +50,7 @@ import { AppIconComponent } from './app-icon.component';
   `
 })
 export class PlayerModalComponent {
+  private reports = inject(PlayerReportService);
   @Input() player: Player | null = null;
   @Output() close = new EventEmitter<void>();
 
@@ -56,5 +58,9 @@ export class PlayerModalComponent {
     if ((event.target as HTMLElement).classList.contains('modal-backdrop')) {
       this.close.emit();
     }
+  }
+
+  printTechnicalReport(): void {
+    if (this.player) this.reports.print(this.player);
   }
 }

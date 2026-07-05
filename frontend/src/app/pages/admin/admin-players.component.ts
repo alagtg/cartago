@@ -30,7 +30,7 @@ import { Player } from '../../core/models/site.models';
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let player of players">
+        <tr *ngFor="let player of pagedPlayers">
           <td>{{ player.fullName }}</td>
           <td>{{ player.position }}</td>
           <td>{{ player.nationality }}</td>
@@ -47,17 +47,41 @@ import { Player } from '../../core/models/site.models';
       </tbody>
     </table>
   </div>
+  <div class="pagination" *ngIf="totalPages > 1">
+    <button (click)="page = page - 1" [disabled]="page === 1">‹</button>
+    <button *ngFor="let p of pages" [class.active]="page === p" (click)="page = p">{{ p }}</button>
+    <button (click)="page = page + 1" [disabled]="page === totalPages">›</button>
+  </div>
   `
 })
 export class AdminPlayersComponent implements OnInit {
   private api = inject(PlayerService);
   private translate = inject(TranslateService);
   players: Player[] = [];
+  page = 1;
+  pageSize = 10;
 
   ngOnInit(): void { this.load(); }
 
   load(): void {
-    this.api.getAdminAll().subscribe((res) => this.players = res);
+    this.api.getAdminAll().subscribe((res) => {
+      this.players = res;
+      this.page = 1;
+    });
+  }
+
+  get totalPages(): number {
+    return Math.max(1, Math.ceil(this.players.length / this.pageSize));
+  }
+
+  get pages(): number[] {
+    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  }
+
+  get pagedPlayers(): Player[] {
+    if (this.page > this.totalPages) this.page = 1;
+    const start = (this.page - 1) * this.pageSize;
+    return this.players.slice(start, start + this.pageSize);
   }
 
   remove(id: number): void {

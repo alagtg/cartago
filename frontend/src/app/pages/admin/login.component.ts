@@ -5,7 +5,6 @@ import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '../../core/services/auth.service';
 import { LanguageSwitcherComponent } from '../../shared/language-switcher.component';
-import { API_BASE_URL } from '../../core/config/api.config';
 
 @Component({
   standalone: true,
@@ -33,7 +32,6 @@ import { API_BASE_URL } from '../../core/config/api.config';
       <div style="display:flex;justify-content:center;margin-top:16px;">
         <app-language-switcher></app-language-switcher>
       </div>
-      <div class="muted" style="font-size:.8rem;margin-top:14px;text-align:center;">API: {{ apiBaseUrl }}</div>
     </form>
   </section>
   `
@@ -45,7 +43,6 @@ export class LoginComponent {
 
   loading = false;
   error = '';
-  apiBaseUrl = API_BASE_URL;
 
   form = this.fb.group({
     email: ['', [Validators.required, Validators.email]],

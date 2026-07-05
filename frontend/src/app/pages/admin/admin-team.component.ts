@@ -18,7 +18,7 @@ import { TeamMember } from '../../core/models/site.models';
     <table>
       <thead><tr><th>{{ 'ADMIN.NAME' | translate }}</th><th>{{ 'ADMIN.ROLE' | translate }}</th><th>{{ 'ADMIN.EMAIL' | translate }}</th><th>{{ 'ADMIN.PHONE' | translate }}</th><th>{{ 'ADMIN.ACTIONS' | translate }}</th></tr></thead>
       <tbody>
-        <tr *ngFor="let member of team">
+        <tr *ngFor="let member of pagedTeam">
           <td>{{ member.fullName }}</td>
           <td>{{ member.role }}</td>
           <td>{{ member.email }}</td>
@@ -33,15 +33,42 @@ import { TeamMember } from '../../core/models/site.models';
       </tbody>
     </table>
   </div>
+  <div class="pagination" *ngIf="totalPages > 1">
+    <button (click)="page = page - 1" [disabled]="page === 1">‹</button>
+    <button *ngFor="let p of pages" [class.active]="page === p" (click)="page = p">{{ p }}</button>
+    <button (click)="page = page + 1" [disabled]="page === totalPages">›</button>
+  </div>
   `
 })
 export class AdminTeamComponent implements OnInit {
   private api = inject(TeamService);
   private translate = inject(TranslateService);
   team: TeamMember[] = [];
+  page = 1;
+  pageSize = 10;
 
   ngOnInit(): void { this.load(); }
-  load(): void { this.api.getAdminAll().subscribe((res) => this.team = res); }
+  load(): void {
+    this.api.getAdminAll().subscribe((res) => {
+      this.team = res;
+      this.page = 1;
+    });
+  }
+
+  get totalPages(): number {
+    return Math.max(1, Math.ceil(this.team.length / this.pageSize));
+  }
+
+  get pages(): number[] {
+    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  }
+
+  get pagedTeam(): TeamMember[] {
+    if (this.page > this.totalPages) this.page = 1;
+    const start = (this.page - 1) * this.pageSize;
+    return this.team.slice(start, start + this.pageSize);
+  }
+
   remove(id: number): void {
     if (!confirm(this.translate.instant('ADMIN.DELETE_MEMBER_CONFIRM'))) return;
     this.api.remove(id).subscribe(() => this.load());

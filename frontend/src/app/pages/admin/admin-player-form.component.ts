@@ -44,7 +44,11 @@ import { PlayerService } from '../../core/services/player.service';
           <div><label>Assists</label><input class="input" type="number" formControlName="assists"></div>
           <div><label>Minutes Played</label><input class="input" type="number" formControlName="minutesPlayed"></div>
           <div><label>Video Url</label><input class="input" formControlName="videoUrl"></div>
-          <div><label>Technical Report Url</label><input class="input" formControlName="technicalReportUrl"></div>
+          <div>
+            <label>Technical Report Url</label>
+            <input class="input" formControlName="technicalReportUrl" placeholder="https://.../rapport.pdf">
+            <div class="form-hint">Ajoutez une vraie URL PDF. Les liens example.com sont ignores.</div>
+          </div>
           <div style="grid-column:1 / -1;"><label>Photo Url</label><input class="input" formControlName="photoUrl"></div>
           <div style="display:flex;align-items:center;gap:10px;margin-top:28px;"><input type="checkbox" formControlName="isFeatured"> Featured</div>
           <div style="display:flex;align-items:center;gap:10px;margin-top:28px;"><input type="checkbox" formControlName="isActive"> Active</div>
@@ -100,7 +104,12 @@ export class AdminPlayerFormComponent implements OnInit {
     this.editMode = !!id;
     if (id) {
       this.id = +id;
-      this.api.getById(this.id).subscribe((res) => this.form.patchValue(res as any));
+      this.api.getById(this.id).subscribe((res) => {
+        this.form.patchValue({
+          ...(res as any),
+          technicalReportUrl: this.cleanTechnicalReportUrl(res.technicalReportUrl)
+        });
+      });
     }
   }
 
@@ -116,7 +125,10 @@ export class AdminPlayerFormComponent implements OnInit {
     this.saving = true;
     this.successMessage = '';
     this.errorMessage = '';
-    const payload = this.form.getRawValue() as any;
+    const payload = {
+      ...(this.form.getRawValue() as any),
+      technicalReportUrl: this.cleanTechnicalReportUrl(this.form.value.technicalReportUrl || '')
+    };
 
     if (this.editMode) {
       this.api.update(this.id, payload).subscribe({
@@ -144,5 +156,11 @@ export class AdminPlayerFormComponent implements OnInit {
         this.errorMessage = 'Unable to create the player.';
       }
     });
+  }
+
+  private cleanTechnicalReportUrl(url?: string | null): string {
+    const trimmed = (url || '').trim();
+    if (!trimmed || trimmed.includes('example.com/report.pdf')) return '';
+    return trimmed;
   }
 }

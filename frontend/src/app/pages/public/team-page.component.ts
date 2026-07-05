@@ -15,7 +15,7 @@ import { TeamMember } from '../../core/models/site.models';
       <p class="section-text">{{ 'TEAM.PAGE_TEXT' | translate }}</p>
 
       <div class="feature-grid" style="margin-top:26px;">
-        <article class="card team-card" *ngFor="let member of team">
+        <article class="card team-card" *ngFor="let member of pagedTeam">
           <img class="team-photo" [src]="member.photoUrl" [alt]="member.fullName">
           <div class="team-body">
             <h3 style="margin:0 0 8px;">{{ member.fullName }}</h3>
@@ -25,6 +25,11 @@ import { TeamMember } from '../../core/models/site.models';
           </div>
         </article>
       </div>
+      <div class="pagination" *ngIf="totalPages > 1">
+        <button (click)="page = page - 1" [disabled]="page === 1">‹</button>
+        <button *ngFor="let p of pages" [class.active]="page === p" (click)="page = p">{{ p }}</button>
+        <button (click)="page = page + 1" [disabled]="page === totalPages">›</button>
+      </div>
     </div>
   </section>
   `
@@ -32,8 +37,27 @@ import { TeamMember } from '../../core/models/site.models';
 export class TeamPageComponent implements OnInit {
   private api = inject(TeamService);
   team: TeamMember[] = [];
+  page = 1;
+  pageSize = 6;
 
   ngOnInit(): void {
-    this.api.getAll().subscribe((res) => this.team = res);
+    this.api.getAll().subscribe((res) => {
+      this.team = res;
+      this.page = 1;
+    });
+  }
+
+  get totalPages(): number {
+    return Math.max(1, Math.ceil(this.team.length / this.pageSize));
+  }
+
+  get pages(): number[] {
+    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  }
+
+  get pagedTeam(): TeamMember[] {
+    if (this.page > this.totalPages) this.page = 1;
+    const start = (this.page - 1) * this.pageSize;
+    return this.team.slice(start, start + this.pageSize);
   }
 }

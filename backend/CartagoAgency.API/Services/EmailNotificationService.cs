@@ -25,7 +25,8 @@ public class EmailNotificationService(
                     subject,
                     html_body = htmlBody,
                     to_email = _settings.ToEmail,
-                    from_name = "Cartago Website"
+                    from_name = "Cartago Website",
+                    from_email = _settings.ToEmail
                 }
             };
 
@@ -38,13 +39,17 @@ public class EmailNotificationService(
 
             if (!response.IsSuccessStatusCode)
             {
-                var error = await response.Content.ReadAsStringAsync();
-                logger.LogWarning("EmailJS error: {Error}", error);
+                var error = await response.Content.ReadAsStringAsync(cts.Token);
+                logger.LogError("EmailJS failed. Status: {Status}. Error: {Error}", response.StatusCode, error);
+            }
+            else
+            {
+                logger.LogInformation("EmailJS sent successfully to {ToEmail}", _settings.ToEmail);
             }
         }
         catch (Exception ex)
         {
-            logger.LogWarning(ex, "EmailJS send failed.");
+            logger.LogError(ex, "EmailJS send failed.");
         }
     }
 }

@@ -1,9 +1,11 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { TranslateModule } from '@ngx-translate/core';
 import { PlayerService } from '../../core/services/player.service';
 import { Player } from '../../core/models/site.models';
+import { PlayerReportService } from '../../core/services/player-report.service';
 
 @Component({
   selector: 'app-player-detail',
@@ -43,7 +45,7 @@ import { Player } from '../../core/models/site.models';
 
             <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:20px;">
               <a href="/#players" class="btn btn-secondary">{{ 'PLAYERS.BACK_HOME' | translate }}</a>
-              <a class="btn btn-primary" *ngIf="player.technicalReportUrl" [href]="player.technicalReportUrl" target="_blank">{{ 'PLAYERS.TECHNICAL_REPORT' | translate }}</a>
+              <button class="btn btn-primary" type="button" (click)="printTechnicalReport()">{{ 'PLAYERS.TECHNICAL_REPORT' | translate }}</button>
               <a class="btn btn-secondary" *ngIf="player.videoUrl" [href]="player.videoUrl" target="_blank">{{ 'PLAYERS.HIGHLIGHTS' | translate }}</a>
             </div>
           </div>
@@ -89,6 +91,20 @@ import { Player } from '../../core/models/site.models';
             </div>
           </div>
         </div>
+
+        <div class="card preview-card" *ngIf="videoEmbedUrl" style="margin-top:24px;">
+          <div class="badge">{{ 'PLAYERS.HIGHLIGHTS' | translate }}</div>
+          <h3 style="margin-top:16px;">Video YouTube</h3>
+          <div style="position:relative;width:100%;aspect-ratio:16 / 9;margin-top:16px;border-radius:18px;overflow:hidden;border:1px solid var(--line);background:#071427;">
+            <iframe
+              [src]="videoEmbedUrl"
+              title="Player video"
+              style="position:absolute;inset:0;width:100%;height:100%;border:0;"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen>
+            </iframe>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -97,10 +113,51 @@ import { Player } from '../../core/models/site.models';
 export class PlayerDetailComponent implements OnInit {
   private api = inject(PlayerService);
   private route = inject(ActivatedRoute);
+  private reports = inject(PlayerReportService);
+  private sanitizer = inject(DomSanitizer);
   player?: Player;
+  videoEmbedUrl?: SafeResourceUrl;
 
   ngOnInit(): void {
     const slug = this.route.snapshot.paramMap.get('slug') || '';
-    this.api.getBySlug(slug).subscribe((res) => this.player = res);
+    this.api.getBySlug(slug).subscribe((res) => {
+      this.player = res;
+      const embedUrl = this.toYoutubeEmbedUrl(res.videoUrl);
+      this.videoEmbedUrl = embedUrl ? this.sanitizer.bypassSecurityTrustResourceUrl(embedUrl) : undefined;
+    });
+  }
+
+  printTechnicalReport(): void {
+    if (this.player) this.reports.print(this.player);
+  }
+
+  private toYoutubeEmbedUrl(url?: string): string {
+    if (!url) return '';
+
+    try {
+      const parsed = new URL(url);
+      const host = parsed.hostname.replace('www.', '');
+
+      if (host === 'youtu.be') {
+        const id = parsed.pathname.split('/').filter(Boolean)[0];
+        return id ? `https://www.youtube.com/embed/${id}` : '';
+      }
+
+      if (host === 'youtube.com' || host === 'm.youtube.com') {
+        if (parsed.pathname === '/watch') {
+          const id = parsed.searchParams.get('v');
+          return id ? `https://www.youtube.com/embed/${id}` : '';
+        }
+
+        const parts = parsed.pathname.split('/').filter(Boolean);
+        if ((parts[0] === 'shorts' || parts[0] === 'embed') && parts[1]) {
+          return `https://www.youtube.com/embed/${parts[1]}`;
+        }
+      }
+    } catch {
+      return '';
+    }
+
+    return '';
   }
 }
